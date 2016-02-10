@@ -30,7 +30,7 @@ var ReactiveVariable = {
                     default:
                         return null;
                 }
-                return handler.id;
+                return handlerWrapper.id;
             },
             Unbind: function (type, id) {
                 var comp = function (element) {
