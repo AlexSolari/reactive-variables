@@ -1,34 +1,39 @@
 function ReactiveVariable(data) {
-  this._data = data;
-  this._beforeSet = [];
-  this._beforeGet = [];
-  this._afterSet = [];
+    this._data = data;
+    this._beforeSet = [];
+    this._beforeGet = [];
+    this._afterSet = [];
 }
 
 ReactiveVariable.BeforeGet = "bS";
-ReactiveVariable.BeforeGet = "bG";
+ReactiveVariable.BeforeSet = "bG";
 ReactiveVariable.AfterSet = "aS";
 
-ReactiveVariable.Initialize = function() {
+ReactiveVariable.Initialize = function () {
     var scopedDOM = document.querySelectorAll('*[data-reactive="true"]');
 
     var length = scopedDOM.length;
     for (var i = 0; i < length; i++) {
-      var variableName = scopedDOM[i].dataset["reactiveTarget"];
+        var variableName = scopedDOM[i].dataset["reactiveTarget"];
 
-      if (!window[variableName])
-        window[variableName] = new ReactiveVariable(null);
-      else if (!(window[variableName] instanceof ReactiveVariable))
-        throw new Error("Target must be ReactiveVariable");
+        if (!window[variableName])
+            window[variableName] = new ReactiveVariable(null);
+        else if (!(window[variableName] instanceof ReactiveVariable))
+            throw new Error("[ReactiveVariable] Target must be ReactiveVariable");
 
-      scopedDOM[i].onchange = function () {
-        window[variableName].Data = this.value;
-      };
+        scopedDOM[i].onchange = function () {
+            window[variableName].Data = this.value;
+        };
     }
 };
 
 ReactiveVariable.prototype = {
     Bind: function (type, handler) {
+        if (!(handler instanceof Function))
+        {
+            throw new Error("[ReactiveVariable] Handler is not a function");
+        }
+
         var handlerWrapper = {
             handler: handler,
             id: Math.random(),
@@ -36,8 +41,7 @@ ReactiveVariable.prototype = {
                 handler.call(self);
             }
         };
-        switch  (type)
-        {
+        switch (type) {
             case ReactiveVariable.BeforeGet:
                 this._beforeGet.push(handlerWrapper);
                 break;
@@ -48,7 +52,7 @@ ReactiveVariable.prototype = {
                 this._afterSet.push(handlerWrapper);
                 break;
             default:
-                return null;
+                throw new Error("[ReactiveVariable] Unknown event type");
         }
         return handlerWrapper.id;
     },
@@ -59,16 +63,16 @@ ReactiveVariable.prototype = {
 
         switch (type) {
             case ReactiveVariable.BeforeGet:
-                this._beforeGet = result._beforeGet.filter(comp);
+                this._beforeGet = this._beforeGet.filter(comp);
                 break;
             case ReactiveVariable.BeforeSet:
-                this._beforeSet = result._beforeSet.filter(comp);
+                this._beforeSet = this._beforeSet.filter(comp);
                 break;
             case ReactiveVariable.AfterSet:
-                this._afterSet = result._afterSet.filter(comp);
+                this._afterSet = this._afterSet.filter(comp);
                 break;
             default:
-                break
+                throw new Error("[ReactiveVariable] Unknown event type");
         }
     },
     get Data() {
