@@ -21,7 +21,9 @@ ReactiveVariable.Initialize = function () {
         else if (!(window[variableName] instanceof ReactiveVariable))
             throw new Error("[ReactiveVariable] Target must be ReactiveVariable");
 
-        scopedDOM[i].onchange = function () {
+        var method = scopedDOM[i].dataset["reactiveMethod"] || "change";
+
+        scopedDOM[i]["on" + method] = function () {
             window[variableName].Data = this.value;
         };
     }
@@ -29,8 +31,7 @@ ReactiveVariable.Initialize = function () {
 
 ReactiveVariable.prototype = {
     Bind: function (type, handler) {
-        if (!(handler instanceof Function))
-        {
+        if (!(handler instanceof Function)) {
             throw new Error("[ReactiveVariable] Handler is not a function");
         }
 
