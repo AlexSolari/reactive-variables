@@ -4,9 +4,9 @@ Variables that can do stuff when setted or getted (observable variables).
 ###Example:
 JS:
 ```javascript
-  var inputLength = new ReactiveVariable();
+    window["__rv-inputLength"] = new ReactiveVariable();
 
-    inputLength.Bind(ReactiveVariable.AfterSet, function () {
+    window["__rv-inputLength"].Bind(ReactiveVariable.AfterSet, function () {
         console.log(this.length);
     });
 
