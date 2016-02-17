@@ -14,7 +14,7 @@ ReactiveVariable.Initialize = function () {
 
     var length = scopedDOM.length;
     for (var i = 0; i < length; i++) {
-        var variableName = scopedDOM[i].dataset["reactiveTarget"];
+        var variableName = "__rv-"+scopedDOM[i].dataset["reactiveTarget"];
 
         if (!window[variableName])
             window[variableName] = new ReactiveVariable(null);
@@ -23,9 +23,11 @@ ReactiveVariable.Initialize = function () {
 
         var method = scopedDOM[i].dataset["reactiveMethod"] || "change";
 
-        scopedDOM[i]["on" + method] = function () {
-            window[variableName].Data = this.value;
-        };
+        scopedDOM[i]["on" + method] = (function (variableName) {
+            return function () {
+                window[variableName].Data = this.value;
+            };
+        })(variableName);
     }
 };
 
