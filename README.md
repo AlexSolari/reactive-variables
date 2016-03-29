@@ -4,9 +4,9 @@ Variables that can do stuff when setted or getted (observable variables).
 ###Example:
 JS:
 ```javascript
-    window["__rv-inputLength"] = new ReactiveVariable();
+        var inputLength = new ReactiveVariable();
 
-    window["__rv-inputLength"].Bind(ReactiveVariable.AfterSet, function () {
+    inputLength.Bind(ReactiveVariable.AfterSet, function () {
         console.log(this.length);
     });
 
@@ -14,8 +14,8 @@ JS:
 ```
 HTML:
 ```html
-  <input data-reactive="true" data-reactive-target="inputLength" data-reactive-method="input"/>
+  <input oninput="inputLength.Data = this.value"/>
   <script src="reactive-variables-core.js"></script>
   <script src="main.js"></script>
 ```
-Result: when you start typing text and `oninput` event triggers, variable `window.inputLength` will be set to it value, and binded handler will be executed.
+Result: when you start typing text and `oninput` event triggers, `inputLength.Data` will be set to it value, and binded handler will be executed.
