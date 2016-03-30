@@ -85,4 +85,8 @@ ReactiveVariable = (function () {
     };
 
     return ReactiveVariable;
-})()
+})();
+
+if (module){
+    module.exports = ReactiveVariable;
+}
