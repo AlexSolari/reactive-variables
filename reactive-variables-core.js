@@ -87,6 +87,6 @@ ReactiveVariable = (function () {
     return ReactiveVariable;
 })();
 
-if (module){
+if (typeof(module) != "undefined"){
     module.exports = ReactiveVariable;
 }
